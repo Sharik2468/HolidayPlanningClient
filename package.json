@@ -1,7 +1,7 @@
 {
   "homepage": "https://Sharik2468.github.io/HolidayPlanningClient",
   "name": "holiday-planning-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "5.6.1",
