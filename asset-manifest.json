@@ -1,12 +1,13 @@
 {
   "files": {
-    "main.css": "/HolidayPlanningClient/static/css/main.7d93435f.css",
-    "main.js": "/HolidayPlanningClient/static/js/main.a58fa9d1.js",
+    "main.css": "/HolidayPlanningClient/static/css/main.516f83fa.css",
+    "main.js": "/HolidayPlanningClient/static/js/main.84bad05b.js",
     "static/media/image-container-profile.png": "/HolidayPlanningClient/static/media/image-container-profile.5ec7a4276eeec3cadcd0.png",
     "static/media/image-container-block4.png": "/HolidayPlanningClient/static/media/image-container-block4.c69c4beb23b776d5e37f.png",
     "static/media/container-background.png": "/HolidayPlanningClient/static/media/container-background.c28e4f3d998f85e1ec7a.png",
     "static/media/image-container-block1.png": "/HolidayPlanningClient/static/media/image-container-block1.05a0e65b835c2fe5b81f.png",
     "static/media/image-container-events.png": "/HolidayPlanningClient/static/media/image-container-events.05a0e65b835c2fe5b81f.png",
+    "static/media/budget.png": "/HolidayPlanningClient/static/media/budget.d24e61ce3a32d4cd415f.png",
     "static/media/no-data.png": "/HolidayPlanningClient/static/media/no-data.0d73d318b7b0f843228a.png",
     "static/media/image container-contractors.png": "/HolidayPlanningClient/static/media/image container-contractors.31ba3b430201a5fb26e7.png",
     "static/media/image-container-block3.png": "/HolidayPlanningClient/static/media/image-container-block3.31ba3b430201a5fb26e7.png",
@@ -15,11 +16,11 @@
     "static/media/image-container-block2.png": "/HolidayPlanningClient/static/media/image-container-block2.b24cdf033a241d3ae43e.png",
     "static/media/modal-logo.png": "/HolidayPlanningClient/static/media/modal-logo.f84eb7e36d848ffbfb89.png",
     "index.html": "/HolidayPlanningClient/index.html",
-    "main.7d93435f.css.map": "/HolidayPlanningClient/static/css/main.7d93435f.css.map",
-    "main.a58fa9d1.js.map": "/HolidayPlanningClient/static/js/main.a58fa9d1.js.map"
+    "main.516f83fa.css.map": "/HolidayPlanningClient/static/css/main.516f83fa.css.map",
+    "main.84bad05b.js.map": "/HolidayPlanningClient/static/js/main.84bad05b.js.map"
   },
   "entrypoints": [
-    "static/css/main.7d93435f.css",
-    "static/js/main.a58fa9d1.js"
+    "static/css/main.516f83fa.css",
+    "static/js/main.84bad05b.js"
   ]
 }
