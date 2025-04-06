@@ -8,6 +8,7 @@ import {PlusOutlined} from "@ant-design/icons";
 import {useFooterContext} from "../../shared/ui/Footer/Footer";
 import {useParams} from "react-router-dom";
 import {BudgetContainer} from "../../widgets";
+import {BudgetCreateModal} from "../../modal/BudgetCreateModal";
 
 export const EventBudgetPage = () => {
     const eventId = `${useParams().id}`
@@ -29,10 +30,8 @@ export const EventBudgetPage = () => {
         updateFloatButton(<RightFloatButton
             tooltipTitle={"Добавить статью"}
             buttonIcon={<PlusOutlined/>}
-            onClick={
-                () => {notification.info(`Создание статьи расхода в разработке!`)}
-                // openCreateBudgetModal
-            }
+            onClick={openCreateBudgetModal}
+
         />)
     }, [])
 
@@ -92,6 +91,9 @@ export const EventBudgetPage = () => {
                         <NoData title={"Статей расходов не найдено"} text={"Нажмите +, чтобы добавить статью"}/>
                 }
             </div>
+            <BudgetCreateModal eventId={eventId} visible={isCreateBudgetModal}
+                                    onCancel={handleCancelBudgetModal}
+                                    onCreateBudget={onCreateBudget}/>
         </>
     )
 }

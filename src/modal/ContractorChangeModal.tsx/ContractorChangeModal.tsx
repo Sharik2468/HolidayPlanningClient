@@ -130,7 +130,7 @@ export const ContractorChangeModal: React.FC<{
             onOk={handleSubmit}
             okButtonText={"Изменить"}
             icon={Logo}
-            modalTitle={"Добавление подрядчика"}
+            modalTitle={"Изменение подрядчика"}
             description={"Измени информацию о подрядчике для мероприятия"}
             visible={visible}
             disabled={Object.values(formData).some(value => value === '')}

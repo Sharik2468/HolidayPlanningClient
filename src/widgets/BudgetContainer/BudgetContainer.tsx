@@ -9,6 +9,7 @@ import {useFetching, useNotification} from "../../shared/hook";
 import {useParams} from "react-router-dom";
 import {calcPercent} from "../../shared/lib";
 import {theme} from "./theme/theme";
+import {BudgetChangeModal} from "../../modal/BudgetChangeModal";
 
 const { Text } = Typography;
 
@@ -51,8 +52,7 @@ export const BudgetContainer: React.FC<{
                 <Button icon={<EditOutlined/>}
                         iconPosition={"start"}
                         onClick={() => {
-                            notification.info('Изменение статьи расхода в разработке')
-                            //openChangeBudgetModal()
+                            openChangeBudgetModal()
                         }}
                         color={"default"}
                         variant={"link"}
@@ -68,7 +68,7 @@ export const BudgetContainer: React.FC<{
                     iconPosition={"start"}
                     loading={isLoadingFetchDeleteBudget}
                     onClick={() => {
-                        notification.info(`Удаление статьи расхода в разработке`)
+                        onDeleteBudget(budget.id);
                         //fetchDeleteBudget()
                     }}
                     color={"danger"}
@@ -84,7 +84,7 @@ export const BudgetContainer: React.FC<{
     const onChangePaidAmount = (value: string) => {
         const newPaiAmount = Number(value)
         if(isNaN(newPaiAmount)){
-            notification.error(`Сумма не может модержать ничего кроме цифр`)
+            notification.error(`Сумма не может содержать ничего кроме цифр`)
         } else {
             fetchChangePaidAmount(newPaiAmount)
         }
@@ -120,7 +120,7 @@ export const BudgetContainer: React.FC<{
                 </div>
                 <div className={cl.description}>
                     <div>
-                        <Text strong>Олачено: </Text>
+                        <Text strong>Оплачено: </Text>
                         <Text strong editable={{
                             maxLength: 15,
                             text: `${budget.paidAmount}`,
@@ -132,6 +132,8 @@ export const BudgetContainer: React.FC<{
                     </div>
                 </div>
             </div>
+            <BudgetChangeModal eventId={eventId} budget={budget} visible={isChangeBudgetModal}
+                                    onChangeBudget={onChangeBudget} onCancel={handleCloseChangeBudgetModal}/>
         </ConfigProvider>
     );
 };
