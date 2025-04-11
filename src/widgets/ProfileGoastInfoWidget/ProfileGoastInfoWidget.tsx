@@ -48,7 +48,7 @@ export const ProfileGoastInfoWidget: React.FC<{eventId: string}> = ({ eventId })
     useEffect(() => {
         fetchGetMemberMetrics()
         fetchGetContractorMetrics()
-    }, []);
+    }, [eventId]);
 
     return (
         <ConfigProvider theme={theme}>

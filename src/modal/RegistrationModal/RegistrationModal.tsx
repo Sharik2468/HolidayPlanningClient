@@ -26,6 +26,9 @@ export const RegistrationModal: React.FC<{
 
                 if (response) {
                     notification.success(`Вы успешно зарегистрировались в системе!`)
+                    handleClose()
+                } else {
+                    notification.error(`Ошибка регистрации!`)
                 }
             } catch (e) {
                 notification.error(`Ошибка регистрации: ${isErrorRegistration}`)
@@ -33,8 +36,14 @@ export const RegistrationModal: React.FC<{
         })
         const handleRegistration = () => {
             fetchRegistration()
-            handleClose()
         };
+
+        const onEnter = (e: any) => {
+            if (e.key === "Enter") {
+                e.preventDefault()
+                handleRegistration()
+            }
+        }
 
         const handleInputChange = (field: 'login' | 'password' | 'repeatPassword', value: string) => {
             setFormData(prev => ({ ...prev, [field]: value }));
@@ -65,39 +74,41 @@ export const RegistrationModal: React.FC<{
                 visible={visible}
                 disabled={!formData.login || !formData.password || !formData.repeatPassword || isPasswordError}
             >
-                <div className={cl.inputLogin}>
-                    <div className={cl.textInput}>Логин:</div>
-                    <Input
-                        style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
-                        value={formData.login}
-                        onChange={(e) => handleInputChange('login', e.target.value)}
-                    />
-                </div>
-                <div className={cl.inputPasswords}>
-                    <div className={cl.textInput}>Пароль:</div>
-                    <Input.Password
-                        status={isPasswordError ? 'error' : ''}
-                        style={{
-                            borderColor: isPasswordError ? '#ff0000' : '#A7CEFC80',
-                            backgroundColor: '#A7CEFC80',
-                            color: 'white'
-                        }}
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                    />
-                </div>
-                <div className={cl.inputPasswords}>
-                    <div className={cl.textInput}>Повторите пароль:</div>
-                    <Input.Password
-                        status={isPasswordError ? 'error' : ''}
-                        style={{
-                            borderColor: isPasswordError ? '#ff0000' : '#A7CEFC80',
-                            backgroundColor: '#A7CEFC80',
-                            color: 'white'
-                        }}
-                        value={formData.repeatPassword}
-                        onChange={(e) => handleInputChange('repeatPassword', e.target.value)}
-                    />
+                <div onKeyDown={onEnter}>
+                    <div className={cl.inputLogin}>
+                        <div className={cl.textInput}>Логин:</div>
+                        <Input
+                            style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
+                            value={formData.login}
+                            onChange={(e) => handleInputChange('login', e.target.value)}
+                        />
+                    </div>
+                    <div className={cl.inputPasswords}>
+                        <div className={cl.textInput}>Пароль:</div>
+                        <Input.Password
+                            status={isPasswordError ? 'error' : ''}
+                            style={{
+                                borderColor: isPasswordError ? '#ff0000' : '#A7CEFC80',
+                                backgroundColor: '#A7CEFC80',
+                                color: 'white'
+                            }}
+                            value={formData.password}
+                            onChange={(e) => handleInputChange('password', e.target.value)}
+                        />
+                    </div>
+                    <div className={cl.inputPasswords}>
+                        <div className={cl.textInput}>Повторите пароль:</div>
+                        <Input.Password
+                            status={isPasswordError ? 'error' : ''}
+                            style={{
+                                borderColor: isPasswordError ? '#ff0000' : '#A7CEFC80',
+                                backgroundColor: '#A7CEFC80',
+                                color: 'white'
+                            }}
+                            value={formData.repeatPassword}
+                            onChange={(e) => handleInputChange('repeatPassword', e.target.value)}
+                        />
+                    </div>
                 </div>
             </Modal>
         );

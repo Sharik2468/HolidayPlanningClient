@@ -1,10 +1,10 @@
 import cl from "./ui/BudgetContainer.module.css";
-import {DeleteOutlined, EditOutlined, SettingOutlined,} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined, SettingOutlined,} from "@ant-design/icons";
 import React, {useState} from "react";
 import {
-    BudgetData, changePaidAmount, deleteBudget
+    BudgetData, changePaidAmountBudget, deleteBudget
 } from "../../shared/api";
-import {Button, ConfigProvider, Dropdown, MenuProps, Progress, Typography} from "antd";
+import {Button, ConfigProvider, Dropdown, MenuProps, Progress, Tooltip, Typography} from "antd";
 import {useFetching, useNotification} from "../../shared/hook";
 import {useParams} from "react-router-dom";
 import {calcPercent} from "../../shared/lib";
@@ -26,7 +26,7 @@ export const BudgetContainer: React.FC<{
             const response = await deleteBudget(budget.id)
             if (response) {
                 onDeleteBudget(budget.id)
-                notification.success(response)
+                notification.success(`Статься расхода '${budget.title}' успешно удалена!`)
             }
         } catch (e) {
             notification.error(`Ошибка при удалении статьи бюджета: ${errorFetchDeleteBudget}`)
@@ -34,11 +34,11 @@ export const BudgetContainer: React.FC<{
     })
     const [fetchChangePaidAmount, isLoadingFetchChangePaidAmount, errorFetchChangePaidAmount] = useFetching(async (newPaidAmount: number) => {
         try {
-            const response = await changePaidAmount(budget.id, budget.isContractor, newPaidAmount)
+            const response = await changePaidAmountBudget(budget.id, budget.isContractor, newPaidAmount)
             if (response) {
                 onChangeBudget(budget.id, {
                     ...budget,
-                    paidAmount: newPaidAmount
+                    paid: newPaidAmount
                 })
             }
         } catch (e) {
@@ -68,8 +68,7 @@ export const BudgetContainer: React.FC<{
                     iconPosition={"start"}
                     loading={isLoadingFetchDeleteBudget}
                     onClick={() => {
-                        onDeleteBudget(budget.id);
-                        //fetchDeleteBudget()
+                        fetchDeleteBudget()
                     }}
                     color={"danger"}
                     variant={"link"}
@@ -83,10 +82,14 @@ export const BudgetContainer: React.FC<{
 
     const onChangePaidAmount = (value: string) => {
         const newPaiAmount = Number(value)
-        if(isNaN(newPaiAmount)){
+        if (isNaN(newPaiAmount)) {
             notification.error(`Сумма не может содержать ничего кроме цифр`)
+        } else if(newPaiAmount < 0) {
+            notification.error(`Сумма не может быть меньше 0`)
         } else {
-            fetchChangePaidAmount(newPaiAmount)
+            const isMoreNecessary = newPaiAmount > budget.amount
+            fetchChangePaidAmount(isMoreNecessary ? budget.amount : newPaiAmount)
+            isMoreNecessary && notification.info('Сумма превышала максимальную. Была выставлена максимально допустимая сумма!')
         }
     };
 
@@ -104,16 +107,23 @@ export const BudgetContainer: React.FC<{
             <div key={budget.id} className={cl.blockContractorBack}>
                 <div className={cl.blockContractorName}>
                     <div>{budget.title}</div>
-                    <Dropdown menu={{ items }} trigger={['click', 'contextMenu']}>
-                        <SettingOutlined className={cl.settingsContractorIcon}/>
-                    </Dropdown>
+                    {
+                        budget.isContractor
+                            ? <Tooltip title="Стать неизменяема, она связана с подтвержденным подрядчиком!" color={'orange'} key={'orange'}>
+                                <InfoCircleOutlined className={cl.settingsContractorIcon}/>
+                            </Tooltip>
+                            : <Dropdown menu={{ items }} trigger={['click', 'contextMenu']}>
+                                <SettingOutlined className={cl.settingsContractorIcon}/>
+                            </Dropdown>
+
+                    }
                 </div>
                 <div className={cl.progressContainer}>
                     <Progress
                         className={cl.progressItem}
                         strokeLinecap={"butt"}
                         size={['100%', 20]}
-                        percent={calcPercent(budget.paidAmount, budget.totalAmount)}
+                        percent={calcPercent(budget.paid, budget.amount)}
                         strokeColor={{ '0%': '#FE9449', '100%': '#EF5282' }}
                         showInfo={false}
                     />
@@ -123,17 +133,17 @@ export const BudgetContainer: React.FC<{
                         <Text strong>Оплачено: </Text>
                         <Text strong editable={{
                             maxLength: 15,
-                            text: `${budget.paidAmount}`,
+                            text: `${budget.paid}`,
                             onChange: onChangePaidAmount
-                        }}>{budget.paidAmount}</Text>
+                        }}>{budget.paid}</Text>
                     </div>
                     <div>
-                        <Text strong>Сумма: {budget.totalAmount}</Text>
+                        <Text strong>Сумма: {budget.amount}</Text>
                     </div>
                 </div>
             </div>
             <BudgetChangeModal eventId={eventId} budget={budget} visible={isChangeBudgetModal}
-                                    onChangeBudget={onChangeBudget} onCancel={handleCloseChangeBudgetModal}/>
+                               onChangeBudget={onChangeBudget} onCancel={handleCloseChangeBudgetModal}/>
         </ConfigProvider>
     );
 };

@@ -26,7 +26,7 @@ export const ProfileBudgetWidget: React.FC<{eventId: string}> = ({ eventId }) =>
 
     useEffect(() => {
         fetchGetBudgetMetrics()
-    }, []);
+    }, [eventId]);
 
     return (
         <>

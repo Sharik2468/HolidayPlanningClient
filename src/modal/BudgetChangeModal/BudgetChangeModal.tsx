@@ -1,11 +1,11 @@
-import React, {useState} from "react";
-import {Input, Select} from "antd";
+import React, {useEffect, useState} from "react";
+import {Input} from "antd";
 import cl from './ui/BudgetChangeModal.module.css'
 import Logo from '../../shared/image/modal-logo.png';
-import {inputStyle, selectStyle} from "./config/theme";
+import {inputStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
 import {
-    BudgetData
+    BudgetData, changeBudget
 } from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
@@ -13,8 +13,8 @@ import {Modal} from "../../shared/ui";
 type FormData = {
     title: string
     description: string,
-    totalAmount: number,
-    paidAmount: number,
+    amount: number,
+    paid: number,
 };
 
 export const BudgetChangeModal: React.FC<{
@@ -27,42 +27,47 @@ export const BudgetChangeModal: React.FC<{
     const [formData, setFormData] = useState<FormData>({
             title: budget.title,
             description: budget.description,
-            paidAmount: budget.paidAmount,
-            totalAmount: budget.totalAmount,
+            paid: budget.paid,
+            amount: budget.amount,
     });
     const notification = useNotification()
-
-    /*const [fetchCreateBudget, isLoadingFetchCreateBudget, errorFetchCreateBudget] = useFetching(async () => {
+    const [fetchCreateBudget, isLoadingFetchCreateBudget, errorFetchCreateBudget] = useFetching(async () => {
         try {
-            const response = await createBudget({
+            const newBudget: BudgetData = {
                 id: budget.id,
                 holidayId: eventId,
                 title: formData.title,
                 description: formData.description,
-                paidAmount: Number(formData.paidAmount),
-                totalAmount: Number(formData.totalAmount),
-                isContractor: false,
-            })
-            if (response) {
-                onChangeBudget(response)
+                paid: Number(formData.paid),
+                amount: Number(formData.amount),
+                isContractor: budget.isContractor,
+            };
+
+            const response = await changeBudget(newBudget)
+            if (response && response.status === 200) {
+                onChangeBudget(budget.id, newBudget);
                 notification.success(`Статья расхода '${formData.title}' успешно изменена!`)
             }
         } catch (e) {
             notification.error(`Ошибка при изменении статьи расхода: ${errorFetchCreateBudget}`)
         }
-    })*/
+    })
+
+    useEffect(() => {
+        setFormData({...budget, paid: budget.paid})
+    }, [budget]);
 
     const handlePaidAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (/^\d*\.?\d*$/.test(value) && (value === '' || parseFloat(value) >= 0)) {
-            setFormData(prev => ({ ...prev, paidAmount: value === '' ? 0 : parseFloat(value) }));
+            setFormData(prev => ({ ...prev, paid: value === '' ? 0 : parseFloat(value) }));
         }
     };
 
     const handleTotalAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         if (/^\d*\.?\d*$/.test(value) && (value === '' || parseFloat(value) >= 0)) {
-            setFormData(prev => ({ ...prev, totalAmount: value === '' ? 0 : parseFloat(value) }));
+            setFormData(prev => ({ ...prev, amount: value === '' ? 0 : parseFloat(value) }));
         }
     };
 
@@ -72,18 +77,7 @@ export const BudgetChangeModal: React.FC<{
     };
 
     const handleSubmit = () => {
-        const newBudget: BudgetData = {
-            id: budget.id,
-            holidayId: eventId,
-            title: formData.title,
-            description: formData.description,
-            paidAmount: formData.paidAmount,
-            totalAmount: formData.totalAmount,
-            isContractor: false,
-        };
-
-        //fetchCreateBudget()
-        onChangeBudget(newBudget.id, newBudget);
+        fetchCreateBudget()
         handleClose();
     };
 
@@ -101,7 +95,8 @@ export const BudgetChangeModal: React.FC<{
             modalTitle={"Изменение статьи расхода"}
             description={"Напиши информацию о статье расхода для мероприятия"}
             visible={visible}
-            disabled={formData.title === '' || formData.paidAmount <= 0 || formData.totalAmount <= 0}
+            loading={isLoadingFetchCreateBudget}
+            disabled={formData.title === '' || formData.paid < 0 || formData.amount <= 0}
         >
             <div className={cl.inputContainer}>
                 <Input
@@ -116,7 +111,7 @@ export const BudgetChangeModal: React.FC<{
                 <Input
                     placeholder="Внесенная стоимость статьи расхода"
                     style={inputStyle}
-                    value={formData.paidAmount}
+                    value={formData.paid}
                     onChange={handlePaidAmountChange}
                     type="number"
                     min={0}
@@ -137,7 +132,7 @@ export const BudgetChangeModal: React.FC<{
                 <Input
                     placeholder="Полная стоимость статьи расхода"
                     style={inputStyle}
-                    value={formData.totalAmount}
+                    value={formData.amount}
                     onChange={handleTotalAmountChange}
                     type="number"
                     min={0}

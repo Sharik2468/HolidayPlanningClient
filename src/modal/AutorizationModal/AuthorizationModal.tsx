@@ -33,6 +33,9 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
                     navigate(RoutesPaths.PROFILE)
                     setIsAuth(true);
                     notification.success(`${formData.login} приведствую в системе!`)
+                    handleClose()
+                } else {
+                    notification.error(`Ошибка авторизации: не правильный логин или пароль!`)
                 }
             } catch (e) {
                 notification.error(`Ошибка авторизации: ${isErrorAuth}`)
@@ -40,7 +43,6 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
         })
         const handleAuth = () => {
             fetchAuth()
-            handleClose()
         };
 
         const handleInputChange = (field: 'login' | 'password', value: string) => {
@@ -51,6 +53,13 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
             setFormData(initialFormState);
             onCancel();
         };
+
+        const onEnter = (e: any) => {
+            if (e.key === "Enter") {
+                e.preventDefault()
+                handleAuth()
+            }
+        }
 
         return (
             <Modal
@@ -64,21 +73,23 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
                 visible={visible}
                 disabled={!formData.login || !formData.password}
             >
-                <div className={cl.inputLogin}>
-                    <div className={cl.textInput}>Логин:</div>
-                    <Input
-                        style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
-                        value={formData.login}
-                        onChange={(e) => handleInputChange('login', e.target.value)}
-                    />
-                </div>
-                <div className={cl.inputPassword}>
-                    <div className={cl.textInput}>Пароль:</div>
-                    <Input.Password
-                        style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                    />
+                <div onKeyDown={onEnter}>
+                    <div className={cl.inputLogin}>
+                        <div className={cl.textInput}>Логин:</div>
+                        <Input
+                            style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
+                            value={formData.login}
+                            onChange={(e) => handleInputChange('login', e.target.value)}
+                        />
+                    </div>
+                    <div className={cl.inputPassword}>
+                        <div className={cl.textInput}>Пароль:</div>
+                        <Input.Password
+                            style={{ borderColor: '#A7CEFC80', backgroundColor: '#A7CEFC80', color: 'white' }}
+                            value={formData.password}
+                            onChange={(e) => handleInputChange('password', e.target.value)}
+                        />
+                    </div>
                 </div>
             </Modal>
         );

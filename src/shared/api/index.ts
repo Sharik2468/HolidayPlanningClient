@@ -1,11 +1,12 @@
 import axios from "axios";
-import {data} from "react-router-dom";
 
-const apiUrl = 'https://fastbrasspage72.conveyor.cloud/api'
+const apiUrl = 'https://localhost:7230/api'
 const eventControllerUrl = `${apiUrl}/Holiday`
 const contractorControllerUrl = `${apiUrl}/Contractor`
 const authControllerUrl = `${apiUrl}/Auth`
 const memberControllerUrl = `${apiUrl}/Member`
+const holidayExpenseControllerUrl = `${apiUrl}/HolidayExpense`
+const expenseControllerUrl = `${apiUrl}/Expense`
 
 
 export function getEnumMapping<T extends object>(enumObj: T, value: keyof T | T[keyof T]): string | number | undefined {
@@ -87,7 +88,7 @@ export interface CreateEventData {
 }
 
 export const createEvent = async (body: CreateEventData) => {
-    return await axios.post(eventControllerUrl, {...body, userId: `${localStorage.getItem('userId')}`}, {
+    return await axios.post(eventControllerUrl, { ...body, userId: `${localStorage.getItem('userId')}` }, {
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json'
@@ -126,7 +127,10 @@ export const deleteEvent = async (eventId: string) => {
 }
 
 export const changeEvent = async (eventId: string, body: EventData) => {
-    return await axios.put(`${eventControllerUrl}/${eventId}`, {...body, userId: `${localStorage.getItem('userId')}`}, {
+    return await axios.put(`${eventControllerUrl}/${eventId}`, {
+        ...body,
+        userId: `${localStorage.getItem('userId')}`
+    }, {
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json'
@@ -144,7 +148,7 @@ export const changeEvent = async (eventId: string, body: EventData) => {
 export enum ContractorCategory {
     "Одежда&Аксессуары" = 1,
     "Красота&Здоровье" = 2,
-    "Музыка&Шоу"= 3,
+    "Музыка&Шоу" = 3,
     "Цветы&Декор" = 4,
     "Фото&Видео" = 5,
     "Банкет" = 6,
@@ -191,7 +195,7 @@ export const menuCategories = Object.values(MenuCategory).filter(
     value => typeof value === "string"
 )
 
-export interface ContractorsData{
+export interface ContractorsData {
     id: string
     name: string,
     description: string,
@@ -315,7 +319,7 @@ export const changeContractor = async (contractorId: string, body: ContractorDat
     )
 }
 
-export const changeContractorStatus = async (contractorId: string, newStatusId: number)=> {
+export const changeContractorStatus = async (contractorId: string, newStatusId: number) => {
     return await axios.patch(`${contractorControllerUrl}/${contractorId}`, {
         contractorId,
         contractorStatusId: `${newStatusId}`
@@ -339,12 +343,12 @@ export interface LoginData {
     password: string
 }
 
-export interface AuthResponse{
+export interface AuthResponse {
     userID: string,
     login: string
 }
 
-export const auth = async (data: LoginData)=> {
+export const auth = async (data: LoginData) => {
     return await axios.post(`${authControllerUrl}/login`, data, {
         headers: {
             "Content-Type": "application/json",
@@ -364,8 +368,8 @@ export interface RegistrationData {
     repeatPassword: string
 }
 
-export const registration = async (data: RegistrationData)=> {
-    if(data.password === data.repeatPassword){
+export const registration = async (data: RegistrationData) => {
+    if (data.password === data.repeatPassword) {
         return await axios.post(`${authControllerUrl}/register`, data, {
             headers: {
                 "Content-Type": "application/json",
@@ -521,7 +525,7 @@ export const getMembersContractorsByEventId = async (eventId: string) => {
     )
 }
 
-export const changeMemberStatus = async (memberId: string, newStatusId: number)=> {
+export const changeMemberStatus = async (memberId: string, newStatusId: number) => {
     return await axios.patch(`${memberControllerUrl}/${memberId}`, {
         memberId,
         memberStatusId: `${newStatusId}`
@@ -593,60 +597,81 @@ export interface BudgetData {
     holidayId: string,
     title: string
     description: string,
-    totalAmount: number,
-    paidAmount: number,
+    amount: number,
+    paid: number,
     isContractor: boolean
 }
 
 export const getBudgetByEventId = async (eventId: string) => {
-    return [
-        {
-            id: `${Date.now()}`,
-            holidayId: '',
-            title: 'Бюджет 1',
-            description: 'Описание бюджета 1',
-            totalAmount: 10000,
-            paidAmount: 1000,
-            isContractor: false
-        },
-        {
-            id: `${Date.now() + 1}`,
-            holidayId: '',
-            title: 'Бюджет 2',
-            description: 'Описание бюджета 2',
-            totalAmount: 10000,
-            paidAmount: 0,
-            isContractor: false
-        },
-        {
-            id: `${Date.now() + 2}`,
-            holidayId: '',
-            title: 'Бюджет 3',
-            description: 'Описание бюджета 3',
-            totalAmount: 5000,
-            paidAmount: 0,
-            isContractor: true
-        },
-        {
-            id: `${Date.now() + 3}`,
-            holidayId: '',
-            title: 'Бюджет 4',
-            description: 'Описание бюджета 4',
-            totalAmount: 5000,
-            paidAmount: 4500,
-            isContractor: true
+    return await axios.get(`${holidayExpenseControllerUrl}/HolidayId/${eventId}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
         }
-    ] as BudgetData[]
+    }).then(
+        response => {
+            return response.data as BudgetData[]
+        }
+    ).catch(
+        error => {
+            console.error(`Ошибка при получении списка статей расходов: ${error}`)
+            return [] as BudgetData[]
+        }
+    )
 }
 
 export const deleteBudget = async (budgetId: string) => {
-    return `Удаление статьи бюджета в разработке!`
+    return await axios.delete(`${expenseControllerUrl}/${budgetId}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при удалении статьи расхода: ${error}`)
+            return undefined
+        }
+    )
 }
 
-export const changePaidAmount = async (id: string, isContractor: boolean, newValue: number) => {
+export const changePaidBudget = async (id: string, newValue: number) => {
+    return await axios.patch(`${expenseControllerUrl}/${id}`, { expenseId: id, paid: newValue }, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при изменении оплаченной суммы статьи расхода: ${error}`)
+            return undefined
+        }
+    )
+}
+
+export const changePaidContractor = async (id: string, newValue: number) => {
+    return await axios.patch(`${contractorControllerUrl}/Paid/ContractorId/${id}`, { contractorId: id, paid: newValue }, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при изменении оплаченной суммы подрядчика: ${error}`)
+            return undefined
+        }
+    )
+}
+
+export const changePaidAmountBudget = async (id: string, isContractor: boolean, newValue: number) => {
     return isContractor
-    ? `Изменение суммы оплаты в разработке! (Статья от подрядчика)`
-        : `Изменение суммы оплаты в разработке!`
+        ? await changePaidContractor(id, newValue)
+        : await changePaidBudget(id, newValue)
 }
 
 export interface BudgetMetrics {
@@ -658,48 +683,10 @@ export interface BudgetMetrics {
 
 export const getBudgetMetricsByEventId = async (eventId: string) => {
     const eventBudget = await getBudgetEventByEventId(eventId)
-    if(eventBudget){
-        const budgetsData = [
-            {
-                id: `${Date.now()}`,
-                holidayId: '',
-                title: 'Бюджет 1',
-                description: 'Описание бюджета 1',
-                totalAmount: 10000,
-                paidAmount: 1000,
-                isContractor: false
-            },
-            {
-                id: `${Date.now() + 1}`,
-                holidayId: '',
-                title: 'Бюджет 2',
-                description: 'Описание бюджета 2',
-                totalAmount: 10000,
-                paidAmount: 0,
-                isContractor: false
-            },
-            {
-                id: `${Date.now() + 2}`,
-                holidayId: '',
-                title: 'Бюджет 3',
-                description: 'Описание бюджета 3',
-                totalAmount: 5000,
-                paidAmount: 0,
-                isContractor: true
-            },
-            {
-                id: `${Date.now() + 3}`,
-                holidayId: '',
-                title: 'Бюджет 4',
-                description: 'Описание бюджета 4',
-                totalAmount: 5000,
-                paidAmount: 4500,
-                isContractor: true
-            }
-        ] as BudgetData[]
-
-        const paid = budgetsData.reduce((sum, item) => sum + item.paidAmount, 0);
-        const waitingPayment = budgetsData.reduce((sum, item) => sum + (item.totalAmount - item.paidAmount), 0);
+    const budgetsData = await getBudgetByEventId(eventId)
+    if (eventBudget && budgetsData) {
+        const paid = budgetsData.reduce((sum, item) => sum + item.paid, 0);
+        const waitingPayment = budgetsData.reduce((sum, item) => sum + (item.amount - item.paid), 0);
         const restBudget = eventBudget - waitingPayment;
 
         return {
@@ -711,4 +698,45 @@ export const getBudgetMetricsByEventId = async (eventId: string) => {
     }
 
     return null
+}
+
+export const changeBudget = async (newBudget: BudgetData) => {
+    return await axios.put(`${expenseControllerUrl}/${newBudget.id}`, newBudget, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при изменении статьи расходов: ${error}`)
+            return undefined
+        }
+    )
+}
+
+export interface CreateBudgetData {
+    id: string,
+    holidayId: string,
+    title: string
+    description: string,
+    amount: number,
+    paid: number,
+}
+
+export const createBudget = async (newBudget: CreateBudgetData) => {
+    return await axios.post(expenseControllerUrl, newBudget, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при добавлении статьи расходов: ${error}`)
+            return undefined
+        }
+    )
 }

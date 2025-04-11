@@ -17,6 +17,7 @@ import { ContractorCreateModal } from "../../modal/ContractorCreateModal.tsx";
 import {useNavigate} from "react-router-dom";
 import {RoutesPaths} from "../../shared/config";
 import {MemberCreateModal} from "../../modal/MemberCreateModal.tsx";
+import {BudgetCreateModal} from "../../modal/BudgetCreateModal";
 
 export const EventContainer: React.FC<{
     event: EventData,
@@ -28,6 +29,7 @@ export const EventContainer: React.FC<{
     const [isChangeEventModal, setIsChangeEventModal] = useState(false);
     const [isCreateContractorModal, setIsCreateContractorModal] = useState(false);
     const [isCreateMemberModal, setIsCreateMemberModal] = useState(false);
+    const [isCreateBudgetModal, setIsCreateBudgetModal] = useState(false);
     const [fetchDeleteEvents, isLoadingFetchDeleteEvents, errorFetchDeleteEvents] = useFetching(async () => {
         try {
             const response = await deleteEvent(event.id)
@@ -56,6 +58,15 @@ export const EventContainer: React.FC<{
 
     const handleCancelCreateMemberModal = () => {
         setIsCreateMemberModal(false);
+    };
+
+    const openCreateBudgetModal = () => {
+        setIsCreateBudgetModal(true);
+    };
+
+
+    const handleCancelCreateBudgetModal = () => {
+        setIsCreateBudgetModal(false);
     };
 
     const items: MenuProps['items'] = [
@@ -161,11 +172,11 @@ export const EventContainer: React.FC<{
                 <Button
                     icon={<><PlusCircleOutlined/> <WalletOutlined/></>}
                     iconPosition={"start"}
-                    onClick={() => {notification.info(`Добавление бюджета в разработке!`)}}
+                    onClick={() => {openCreateBudgetModal()}}
                     color={"default"}
                     variant={"link"}
                 >
-                    Добавить бюджет
+                    Добавить статью расхода
                 </Button>
             ),
             key: '7',
@@ -198,6 +209,7 @@ export const EventContainer: React.FC<{
             <EventChangeModal event={event} visible={isChangeEventModal} onCancel={handleCloseChangeEventModal} onChangeEvent={onChangeEvent}/>
             <ContractorCreateModal eventId={event.id} visible={isCreateContractorModal} onCancel={handleCancelCreateContractorModal} onCreateContractor={() => {}}/>
             <MemberCreateModal eventId={event.id} visible={isCreateMemberModal} onCreateMember={() => {}} onCancel={handleCancelCreateMemberModal}/>
+            <BudgetCreateModal eventId={event.id} visible={isCreateBudgetModal} onCancel={handleCancelCreateBudgetModal} onCreateBudget={() => {}}/>
         </>
     );
 };

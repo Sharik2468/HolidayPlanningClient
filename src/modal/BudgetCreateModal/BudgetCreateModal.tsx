@@ -5,7 +5,7 @@ import Logo from '../../shared/image/modal-logo.png';
 import {inputStyle, selectStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
 import {
-    BudgetData
+    BudgetData, createBudget
 } from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
@@ -33,25 +33,25 @@ export const BudgetCreateModal: React.FC<{
     const [formData, setFormData] = useState<FormData>(initialFormState);
     const notification = useNotification()
 
-    /*const [fetchCreateBudget, isLoadingFetchCreateBudget, errorFetchCreateBudget] = useFetching(async () => {
+    const [fetchCreateBudget, isLoadingFetchCreateBudget, errorFetchCreateBudget] = useFetching(async () => {
         try {
-            const response = await createBudget({
+            const newBudget = {
                 id: `${Date.now()}`,
                 holidayId: eventId,
                 title: formData.title,
                 description: formData.description,
-                paidAmount: Number(formData.paidAmount),
-                totalAmount: Number(formData.totalAmount),
-                isContractor: false,
-            })
-            if (response) {
-                onCreateBudget(response)
+                paid: Number(formData.paidAmount),
+                amount: Number(formData.totalAmount)
+            }
+            const response = await createBudget(newBudget)
+            if (response && response.status === 200) {
+                onCreateBudget({...newBudget, isContractor: false})
                 notification.success(`Статья расхода '${formData.title}' успешно добавлена!`)
             }
         } catch (e) {
             notification.error(`Ошибка при добавлении статьи расхода: ${errorFetchCreateBudget}`)
         }
-    })*/
+    })
 
     const handlePaidAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -73,18 +73,7 @@ export const BudgetCreateModal: React.FC<{
     };
 
     const handleSubmit = () => {
-        const newBudget: BudgetData = {
-            id: `${Date.now()}`, // Генерация уникального id
-            holidayId: eventId,
-            title: formData.title,
-            description: formData.description,
-            paidAmount: formData.paidAmount,
-            totalAmount: formData.totalAmount,
-            isContractor: false,
-        };
-
-        //fetchCreateBudget()
-        onCreateBudget(newBudget);
+        fetchCreateBudget()
         handleClose();
     };
 
@@ -102,7 +91,8 @@ export const BudgetCreateModal: React.FC<{
             modalTitle={"Добавление статьи расхода"}
             description={"Напиши информацию о статье расхода для мероприятия"}
             visible={visible}
-            disabled={formData.title === '' || formData.paidAmount <= 0 || formData.totalAmount <= 0}
+            loading={isLoadingFetchCreateBudget}
+            disabled={formData.title === '' || formData.paidAmount < 0 || formData.totalAmount <= 0}
         >
             <div className={cl.inputContainer}>
                 <Input

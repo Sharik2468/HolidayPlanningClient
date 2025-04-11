@@ -9,6 +9,7 @@ import {useFooterContext} from "../../shared/ui/Footer/Footer";
 import {useParams} from "react-router-dom";
 import {BudgetContainer} from "../../widgets";
 import {BudgetCreateModal} from "../../modal/BudgetCreateModal";
+import {Tooltip} from "antd";
 
 export const EventBudgetPage = () => {
     const eventId = `${useParams().id}`
@@ -80,20 +81,20 @@ export const EventBudgetPage = () => {
                 {
                     budgets.length > 0
                         ? budgets.map((budget, index) =>
-                            <BudgetContainer
-                                budget={budget}
-                                key={index}
-                                onDeleteBudget={onDeleteBudget}
-                                onChangeBudget={onChangeBudget}
-                            />
+                                <BudgetContainer
+                                    budget={budget}
+                                    key={index}
+                                    onDeleteBudget={onDeleteBudget}
+                                    onChangeBudget={onChangeBudget}
+                                />
                         )
                         :
                         <NoData title={"Статей расходов не найдено"} text={"Нажмите +, чтобы добавить статью"}/>
                 }
             </div>
             <BudgetCreateModal eventId={eventId} visible={isCreateBudgetModal}
-                                    onCancel={handleCancelBudgetModal}
-                                    onCreateBudget={onCreateBudget}/>
+                               onCancel={handleCancelBudgetModal}
+                               onCreateBudget={onCreateBudget}/>
         </>
     )
 }
