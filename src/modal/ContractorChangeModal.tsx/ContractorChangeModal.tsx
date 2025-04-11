@@ -53,7 +53,8 @@ export const ContractorChangeModal: React.FC<{
                 serviceCost: Number(formData.serviceCost),
                 holidayId: eventId,
                 statusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
-                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`
+                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
+                paid: contractor.paid
             })
             if (response) {
                 onChangeContractor(contractor.id, {
@@ -64,7 +65,8 @@ export const ContractorChangeModal: React.FC<{
                     phoneNumber: formData.phoneNumber,
                     email: formData.email,
                     status: formData.status,
-                    serviceCost: Number(formData.serviceCost)
+                    serviceCost: Number(formData.serviceCost),
+                    paid: contractor.paid
                 });
                 notification.success(`Подрядчик '${formData.name}' успешно изменен!`)
             }

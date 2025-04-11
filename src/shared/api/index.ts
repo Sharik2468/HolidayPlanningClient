@@ -203,7 +203,8 @@ export interface ContractorsData {
     phoneNumber: string,
     email: string,
     serviceCost: number,
-    status: string
+    status: string,
+    paid: number
 }
 
 export const getEventContractors = async (eventId: string) => {
@@ -223,7 +224,8 @@ export const getEventContractors = async (eventId: string) => {
                 email: contractor.email,
                 serviceCost: contractor.serviceCost,
                 category: getEnumMapping(ContractorCategory, Number(contractor.сategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(contractor.statusId))
+                status: getEnumMapping(ContractorStatus, Number(contractor.statusId)),
+                paid: contractor.paid
             }));
             return mapData
         }
@@ -244,7 +246,8 @@ export interface ContractorDataRequest {
     description: string,
     phoneNumber: string,
     email: string,
-    serviceCost: number
+    serviceCost: number,
+    paid: number
 }
 
 export interface ContractorDataResponse {
@@ -256,7 +259,8 @@ export interface ContractorDataResponse {
     description: string,
     phoneNumber: string,
     email: string,
-    serviceCost: number
+    serviceCost: number,
+    paid: number
 }
 
 export const createContractor = async (body: ContractorDataRequest): Promise<ContractorsData | undefined> => {
@@ -276,7 +280,8 @@ export const createContractor = async (body: ContractorDataRequest): Promise<Con
                 email: data.email,
                 serviceCost: data.serviceCost,
                 category: getEnumMapping(ContractorCategory, Number(data.сategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(data.statusId))
+                status: getEnumMapping(ContractorStatus, Number(data.statusId)),
+                paid: data.paid
             } as ContractorsData
         }
     ).catch(

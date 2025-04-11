@@ -55,7 +55,8 @@ export const ContractorCreateModal: React.FC<{
                 serviceCost: Number(formData.serviceCost),
                 holidayId: eventId,
                 statusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
-                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`
+                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
+                paid: 0
             })
             if (response) {
                 onCreateContractor(response)
@@ -103,17 +104,6 @@ export const ContractorCreateModal: React.FC<{
 
 
     const handleSubmit = () => {
-        const newContractor: ContractorsData = {
-            id: `${Date.now()}`, // Генерация уникального id
-            name: formData.name,
-            description: formData.description,
-            category: formData.category,
-            phoneNumber: formData.phoneNumber,
-            email: formData.email,
-            serviceCost: parseFloat(formData.serviceCost) || 0,
-            status: formData.status
-        };
-
         fetchCreateContractor()
         handleClose();
     };
