@@ -32,7 +32,7 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
                     localStorage.setItem('userId', response.userID)
                     navigate(RoutesPaths.PROFILE)
                     setIsAuth(true);
-                    notification.success(`${formData.login} приведствую в системе!`)
+                    notification.success(`${formData.login} приветствую в системе!`)
                     handleClose()
                 } else {
                     notification.error(`Ошибка авторизации: не правильный логин или пароль!`)
