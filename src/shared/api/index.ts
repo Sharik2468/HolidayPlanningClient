@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = 'https://lastbrushedroof72.conveyor.cloud/api'
+const apiUrl = 'https://largeminthouse30.conveyor.cloud/api'
 const eventControllerUrl = `${apiUrl}/Holiday`
 const contractorControllerUrl = `${apiUrl}/Contractor`
 const authControllerUrl = `${apiUrl}/Auth`
