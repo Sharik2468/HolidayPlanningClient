@@ -32,6 +32,8 @@ export const RegistrationModal: React.FC<{
                 }
             } catch (e) {
                 notification.error(`Ошибка регистрации: ${isErrorRegistration}`)
+            } finally {
+                handleClose()
             }
         })
         const handleRegistration = () => {

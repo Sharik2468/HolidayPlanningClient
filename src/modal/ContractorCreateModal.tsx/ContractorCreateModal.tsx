@@ -64,6 +64,8 @@ export const ContractorCreateModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при добавлении подрядчика: ${errorFetchCreateContractor}`)
+        } finally {
+            handleClose()
         }
     })
 
@@ -105,7 +107,6 @@ export const ContractorCreateModal: React.FC<{
 
     const handleSubmit = () => {
         fetchCreateContractor()
-        handleClose();
     };
 
     const handleClose = () => {
@@ -123,6 +124,7 @@ export const ContractorCreateModal: React.FC<{
             modalTitle={"Добавление подрядчика"}
             description={"Напиши информацию о подрядчике для мероприятия"}
             visible={visible}
+            loading={isLoadingFetchCreateContractor}
             disabled={Object.values(formData).some(value => value === '')}
         >
             <div className={cl.inputContainer}>

@@ -39,6 +39,8 @@ export const AuthorizationModal: React.FC<AuthorizationModalProps> =
                 }
             } catch (e) {
                 notification.error(`Ошибка авторизации: ${isErrorAuth}`)
+            } finally {
+                handleClose()
             }
         })
         const handleAuth = () => {

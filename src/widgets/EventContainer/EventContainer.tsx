@@ -36,6 +36,9 @@ export const EventContainer: React.FC<{
             if (response && response.status === 200) {
                 onDeleteEvent(event.id)
                 notification.success(`Мероприятие '${event.title}' успешно удалено!`)
+                if(localStorage.getItem('selectEventId') === event.id){
+                    localStorage.removeItem('selectEventId')
+                }
             }
         } catch (e) {
             notification.error(`Ошибка при удалении меропрития: ${errorFetchDeleteEvents}`)

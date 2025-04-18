@@ -89,7 +89,7 @@ export const EventBudgetPage = () => {
                                 />
                         )
                         :
-                        <NoData title={"Статей расходов не найдено"} text={"Нажмите +, чтобы добавить статью"}/>
+                        <NoData title={"Статей расходов не найдено"} text={"Нажмите +, чтобы добавить статью"} loading={isLoadingFetchGetBudgets}/>
                 }
             </div>
             <BudgetCreateModal eventId={eventId} visible={isCreateBudgetModal}

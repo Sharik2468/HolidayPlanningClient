@@ -8,7 +8,6 @@ import {
     changeMember,
     ContractorStatus,
     contractorStatus,
-    createMember,
     getEnumMapping,
     memberCategories,
     MemberCategory,
@@ -81,6 +80,8 @@ export const MemberChangeModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при изменении гостя: ${errorFetchChangeMember}`)
+        } finally {
+            handleClose()
         }
     })
 
@@ -123,7 +124,6 @@ export const MemberChangeModal: React.FC<{
 
     const handleSubmit = () => {
         fetchChangeMember()
-        handleClose();
     };
 
     const handleClose = () => {

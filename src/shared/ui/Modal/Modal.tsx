@@ -18,6 +18,10 @@ const modalTheme = {
             colorBgElevated: "rgb(100,122,148)",
             optionSelectedBg: "rgba(167, 206, 252, 0.5)"
         },
+        DatePicker: {
+            colorTextPlaceholder: "rgba(0,0,0,0.4)",
+            colorTextDisabled: "rgba(0,0,0,0.4)"
+        },
         Radio: {
             buttonSolidCheckedBg: "linear-gradient(to right, #FE9449, #EF5282)",
             buttonSolidCheckedHoverBg: "linear-gradient(to right, #FE9449, #EF5282)",

@@ -74,6 +74,8 @@ export const MemberCreateModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при добавлении гостя: ${errorFetchCreateMember}`)
+        } finally {
+            handleClose();
         }
     })
 
@@ -112,7 +114,6 @@ export const MemberCreateModal: React.FC<{
 
     const handleSubmit = () => {
         fetchCreateMember()
-        handleClose();
     };
 
     const handleClose = () => {

@@ -36,19 +36,22 @@ export const EventCreateModal: React.FC<{
     const notification = useNotification()
     const [fetchCreateEvents, isLoadingFetchCreateEvents, errorFetchCreateEvents] = useFetching(async () => {
         try {
-            const response = await createEvent({
+            const newEvent = {
                 id: `${Date.now()}`,
                 title: formData.title,
                 budget: Number(formData.budget),
                 startDate: new Date(`${formData.startDate} ${formData.startTime}`),
                 endDate: new Date(`${formData.endDate} ${formData.endTime}`),
-            })
+            }
+            const response = await createEvent(newEvent)
             if (response) {
-                onCreateEvent && onCreateEvent(response)
+                onCreateEvent && onCreateEvent(newEvent)
                 notification.success(`Мероприятие '${formData.title}' успешно создано!`)
             }
         } catch (e) {
             notification.error(`Ошибка при создании меропрития: ${errorFetchCreateEvents}`)
+        } finally {
+            handleClose();
         }
     })
 
@@ -98,6 +101,7 @@ export const EventCreateModal: React.FC<{
             modalTitle={"Создать новое мероприятие"}
             description={"Настройте мероприятие и приступите к его планированию"}
             visible={visible}
+            loading={isLoadingFetchCreateEvents}
             disabled={Object.values(formData).some(value => value === '')}
         >
             <div className={cl.inputContainer}>

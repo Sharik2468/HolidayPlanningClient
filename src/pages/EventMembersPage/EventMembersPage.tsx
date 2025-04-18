@@ -151,7 +151,7 @@ export const EventMembersPage = () => {
                                     />
                                 )
                                 :
-                                <NoData title={"Гостей не найдено"} text={"Нажмите +, чтобы добавить гостя"}/>
+                                <NoData title={"Гостей не найдено"} text={"Нажмите +, чтобы добавить гостя"} loading={isLoadingFetchGetMembers}/>
                         }
                     </div>
                 </div>

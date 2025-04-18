@@ -6,6 +6,11 @@
     font-size: 3vh;
 }
 
+.loader {
+    height: 50%;
+    width: 50%;
+}
+
 .textNoData {
     font-size: 2vh;
     color: #888888;

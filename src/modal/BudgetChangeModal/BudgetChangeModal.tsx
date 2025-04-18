@@ -50,6 +50,8 @@ export const BudgetChangeModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при изменении статьи расхода: ${errorFetchCreateBudget}`)
+        } finally {
+            handleClose()
         }
     })
 
@@ -78,7 +80,6 @@ export const BudgetChangeModal: React.FC<{
 
     const handleSubmit = () => {
         fetchCreateBudget()
-        handleClose();
     };
 
     const handleClose = () => {

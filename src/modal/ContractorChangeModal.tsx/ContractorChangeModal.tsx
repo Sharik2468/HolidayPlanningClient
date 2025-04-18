@@ -72,6 +72,8 @@ export const ContractorChangeModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при изменении подрядчика: ${errorFetchChangeContractor}`)
+        } finally {
+            handleClose()
         }
     })
 
@@ -117,7 +119,6 @@ export const ContractorChangeModal: React.FC<{
 
     const handleSubmit = () => {
         fetchChangeContractor()
-        handleClose();
     };
 
     const handleClose = () => {
@@ -135,6 +136,7 @@ export const ContractorChangeModal: React.FC<{
             modalTitle={"Изменение подрядчика"}
             description={"Измени информацию о подрядчике для мероприятия"}
             visible={visible}
+            loading={isLoadingFetchChangeContractor}
             disabled={Object.values(formData).some(value => value === '')}
         >
             <div className={cl.inputContainer}>

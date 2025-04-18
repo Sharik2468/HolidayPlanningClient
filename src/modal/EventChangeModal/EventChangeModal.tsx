@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import {Input, Image, DatePicker, TimePicker, ConfigProvider} from "antd";
+import {Input, DatePicker, TimePicker} from "antd";
 import dayjs, {Dayjs} from "dayjs";
 import cl from './ui/EventChangeModal.module.css';
 import Logo from '../../shared/image/modal-logo.png';
 import {dateTimePickerStyle, inputStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
-import {changeEvent, createEvent, EventData} from "../../shared/api";
+import {changeEvent, EventData} from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
 
@@ -51,6 +51,8 @@ export const EventChangeModal: React.FC<{
             }
         } catch (e) {
             notification.error(`Ошибка при изменении меропрития: ${errorFetchChangeEvents}`)
+        } finally {
+            handleClose()
         }
     })
 
@@ -84,7 +86,6 @@ export const EventChangeModal: React.FC<{
 
     const handleSubmit = () => {
         fetchChangeEvents()
-        onCancel();
     };
 
     const handleClose = () => {
@@ -98,6 +99,7 @@ export const EventChangeModal: React.FC<{
             onOk={handleSubmit}
             icon={Logo}
             visible={visible}
+            loading={isLoadingFetchChangeEvents}
             disabled={Object.values(formData).some(value => value === '')}
             okButtonText={"Сохранить"}
             modalTitle={"Изменить мероприятие"}

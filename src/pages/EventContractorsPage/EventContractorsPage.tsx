@@ -119,7 +119,7 @@ export const EventContractorsPage = () => {
                                     />
                                 )
                                 :
-                                <NoData title={"Подрядчиков не найдено"} text={"Нажмите +, чтобы добавить подрядчика"}/>
+                                <NoData title={"Подрядчиков не найдено"} text={"Нажмите +, чтобы добавить подрядчика"} loading={isLoadingFetchGetContractors}/>
                         }
                     </div>
                 </div>
