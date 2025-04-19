@@ -10,6 +10,7 @@ import {useNavigate} from "react-router-dom";
 import {RoutesPaths} from "../../shared/config";
 import {useFooterContext} from "../../shared/ui/Footer/Footer";
 import cl from "./ui/ProfilePage.module.css";
+import { Spin, Alert, Button } from 'antd';
 
 export const ProfilePage = () => {
     const navigate = useNavigate()
@@ -18,6 +19,8 @@ export const ProfilePage = () => {
     const [events, setEvents] = useState<EventData[]>([]);
     const [selectedEventId, setSelectedEventId] = useState(localStorage.getItem('selectEventId'))
     const [isCreateEventModal, setIsCreateEventModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [fetchGetEvents, isLoadingFetchGetEvents, errorFetchGetEvents] = useFetching(async () => {
         try {
             const response = await getAllEvents()
@@ -31,9 +34,65 @@ export const ProfilePage = () => {
     })
 
     useEffect(() => {
-        updateFloatButton(undefined)
-        fetchGetEvents()
-    }, [])
+        const loadData = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                
+                // Проверка авторизации
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    navigate(RoutesPaths.HOME);
+                    return;
+                }
+
+                await fetchGetEvents();
+                
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Произошла ошибка при загрузке данных');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                height: '100vh' 
+            }}>
+                <Spin size="large" tip="Загрузка..." />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                flexDirection: 'column',
+                gap: '16px'
+            }}>
+                <Alert
+                    message="Ошибка"
+                    description={error}
+                    type="error"
+                    showIcon
+                />
+                <Button onClick={() => window.location.reload()}>
+                    Попробовать снова
+                </Button>
+            </div>
+        );
+    }
 
     const updateSelectedId = (newSelectedId: string) => {
         const targetEvent = events.find(event => event.id === newSelectedId);
