@@ -6,42 +6,63 @@ import {AdviceContainer, InfoContainer, ProfileMenu} from "../../shared/ui";
 import {PlusOutlined} from "@ant-design/icons";
 import {ProfileBudgetWidget, ProfileEventsWidget, ProfileGoastInfoWidget} from "../../widgets";
 import {EventCreateModal} from "../../modal/EventCreateModal";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {RoutesPaths} from "../../shared/config";
 import {useFooterContext} from "../../shared/ui/Footer/Footer";
+import { Spin } from 'antd';
 import cl from "./ui/ProfilePage.module.css";
 
 export const ProfilePage = () => {
-    const navigate = useNavigate()
-    const notification = useNotification()
-    const {updateFloatButton } = useFooterContext()
+    const navigate = useNavigate();
+    const location = useLocation();
+    const notification = useNotification();
+    const {updateFloatButton} = useFooterContext();
     const [events, setEvents] = useState<EventData[]>([]);
-    const [selectedEventId, setSelectedEventId] = useState(localStorage.getItem('selectEventId'))
-    const [isCreateEventModal, setIsCreateEventModal] = useState(false)
+    const [selectedEventId, setSelectedEventId] = useState(localStorage.getItem('selectEventId'));
+    const [isCreateEventModal, setIsCreateEventModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     const [fetchGetEvents, isLoadingFetchGetEvents, errorFetchGetEvents] = useFetching(async () => {
         try {
-            const response = await getAllEvents()
-
-            if(response){
-                setEvents(response)
+            setIsLoading(true);
+            const response = await getAllEvents();
+            if (response) {
+                setEvents(response);
             }
         } catch (e) {
-            notification.error(`Ошибка при получении меропритий: ${errorFetchGetEvents}`)
+            notification.error(`Ошибка при получении меропритий: ${errorFetchGetEvents}`);
+        } finally {
+            setIsLoading(false);
         }
-    })
+    });
 
     useEffect(() => {
-        updateFloatButton(undefined)
-        fetchGetEvents()
-    }, [])
+        let mounted = true;
+
+        const init = async () => {
+            updateFloatButton(undefined);
+            await fetchGetEvents();
+        };
+
+        init();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    const handleNavigation = (path: string) => {
+        if (!isLoading) {
+            navigate(path);
+        }
+    };
 
     const updateSelectedId = (newSelectedId: string) => {
         const targetEvent = events.find(event => event.id === newSelectedId);
-        if (!targetEvent) return events; // Если не найден — возвращаем исходный массив
-        const remainingEvents = events.filter(event => event.id !== newSelectedId);
-        setEvents([targetEvent, ...remainingEvents])
-        setSelectedEventId(newSelectedId)
-    }
+        if (!targetEvent) return;
+        
+        setSelectedEventId(newSelectedId);
+    };
 
     const openCreateEventModal = () => {
         setIsCreateEventModal(true);
@@ -51,13 +72,26 @@ export const ProfilePage = () => {
         setIsCreateEventModal(false);
     };
 
+    if (isLoading) {
+        return (
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                minHeight: '100vh' 
+            }}>
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
         <>
             <InfoContainer
                 title={"Давайте займемся организацией вашего мероприятия"}
                 src={ImageContainerProfile}
                 onBtnClick={openCreateEventModal}
-                buttonSettings={{ btnIcon: <PlusOutlined/>, iconPosition: 'end', btnText: "Создать мероприятие" }}
+                buttonSettings={{btnIcon: <PlusOutlined/>, iconPosition: 'end', btnText: "Создать мероприятие"}}
             />
             <ProfileMenu/>
             <div className={cl.contentResume}>
@@ -65,22 +99,26 @@ export const ProfilePage = () => {
                     <div className={cl.resumeBlock}>Сводка</div>
                     <div className={cl.resumeUnderline}></div>
 
-                    {events.length !== 0 && <ProfileEventsWidget
-                        events={events}
-                        updateSelectedEventId={updateSelectedId}
-                    />}
-                    <ProfileGoastInfoWidget eventId={`${selectedEventId}`}/>
-                    <ProfileBudgetWidget eventId={`${selectedEventId}`}/>
+                    {events.length !== 0 && (
+                        <ProfileEventsWidget
+                            events={events}
+                            updateSelectedEventId={updateSelectedId}
+                        />
+                    )}
+                    {selectedEventId && (
+                        <>
+                            <ProfileGoastInfoWidget eventId={selectedEventId}/>
+                            <ProfileBudgetWidget eventId={selectedEventId}/>
+                        </>
+                    )}
                 </div>
             </div>
             <AdviceContainer/>
             <EventCreateModal
                 visible={isCreateEventModal}
                 onCancel={handleCancelCreateEventModal}
-                onCreateEvent={() => {
-                    navigate(RoutesPaths.EVENTS)
-                }}
+                onCreateEvent={() => handleNavigation(RoutesPaths.EVENTS)}
             />
         </>
-    )
-}
+    );
+};

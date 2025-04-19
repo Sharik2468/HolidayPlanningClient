@@ -1,32 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Holiday Planning</title>
-    <script type="text/javascript">
-        try {
-            var pathSegmentsToKeep = 1;
-            var l = window.location;
-            var newUrl = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-                l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-                l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-                (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-                l.hash;
-            
-            console.log('Redirecting to:', newUrl);
-            l.replace(newUrl);
-        } catch (e) {
-            console.error('Error during redirect:', e);
-            // Fallback redirect to home page
-            window.location.href = '/HolidayPlanningClient/';
-        }
-    </script>
-</head>
-<body>
-    <noscript>
-        <h1>JavaScript Required</h1>
-        <p>Please enable JavaScript to use this application.</p>
-        <a href="/HolidayPlanningClient/">Go to Home Page</a>
-    </noscript>
-</body>
+  <head>
+    <meta http-equiv="refresh" content="0;url=./">
+  </head>
+  <body>
+    Redirecting...
+  </body>
 </html>
