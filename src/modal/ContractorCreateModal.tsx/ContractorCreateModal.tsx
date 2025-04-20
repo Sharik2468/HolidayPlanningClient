@@ -48,14 +48,14 @@ export const ContractorCreateModal: React.FC<{
         try {
             const response = await createContractor({
                 id: `${Date.now()}`,
+                holidayId: eventId,
+                ContractorStatusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
+                ContractorСategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
                 title: formData.name,
                 description: formData.description,
                 phoneNumber: formData.phoneNumber,
                 email: formData.email,
                 serviceCost: Number(formData.serviceCost),
-                holidayId: eventId,
-                statusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
-                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
                 paid: 0
             })
             if (response) {

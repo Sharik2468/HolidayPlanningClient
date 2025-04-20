@@ -240,8 +240,8 @@ export const getEventContractors = async (eventId: string) => {
 export interface ContractorDataRequest {
     id: string
     holidayId: string,
-    statusId: string,
-    сategoryId: string,
+    ContractorStatusId: string,
+    ContractorСategoryId: string,
     title: string,
     description: string,
     phoneNumber: string,
