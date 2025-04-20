@@ -223,8 +223,8 @@ export const getEventContractors = async (eventId: string) => {
                 phoneNumber: contractor.phoneNumber,
                 email: contractor.email,
                 serviceCost: contractor.serviceCost,
-                category: getEnumMapping(ContractorCategory, Number(contractor.сategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(contractor.statusId)),
+                category: getEnumMapping(ContractorCategory, Number(contractor.contractorСategoryId)),
+                status: getEnumMapping(ContractorStatus, Number(contractor.contractorStatusId)),
                 paid: contractor.paid
             }));
             return mapData
@@ -253,8 +253,8 @@ export interface ContractorDataRequest {
 export interface ContractorDataResponse {
     id: string
     holidayId: string,
-    statusId: string,
-    сategoryId: string,
+    contractorStatusId: string,
+    contractorСategoryId: string,
     title: string,
     description: string,
     phoneNumber: string,
@@ -279,8 +279,8 @@ export const createContractor = async (body: ContractorDataRequest): Promise<Con
                 phoneNumber: data.phoneNumber,
                 email: data.email,
                 serviceCost: data.serviceCost,
-                category: getEnumMapping(ContractorCategory, Number(data.сategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(data.statusId)),
+                category: getEnumMapping(ContractorCategory, Number(data.contractorСategoryId)),
+                status: getEnumMapping(ContractorStatus, Number(data.contractorStatusId)),
                 paid: data.paid
             } as ContractorsData
         }
@@ -325,7 +325,7 @@ export const changeContractor = async (contractorId: string, body: ContractorDat
 }
 
 export const changeContractorStatus = async (contractorId: string, newStatusId: number) => {
-    return await axios.patch(`${contractorControllerUrl}/${contractorId}`, {
+    return await axios.patch(`${contractorControllerUrl}/Status/ContractorId/${contractorId}`, {
         contractorId,
         contractorStatusId: `${newStatusId}`
     }, {
@@ -502,7 +502,7 @@ export const getMembersContractorsByEventId = async (eventId: string) => {
             const counts = { anticipation: 0, confirmed: 0, rejected: 0 };
 
             data.forEach((contractor: ContractorDataResponse) => {
-                const statusId = Number(contractor.statusId);
+                const statusId = Number(contractor.contractorStatusId);
                 if (statusId === 1) counts.anticipation++;
                 else if (statusId === 2) counts.confirmed++;
                 else if (statusId === 3) counts.rejected++;

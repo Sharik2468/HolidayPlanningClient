@@ -52,8 +52,8 @@ export const ContractorChangeModal: React.FC<{
                 email: formData.email,
                 serviceCost: Number(formData.serviceCost),
                 holidayId: eventId,
-                statusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
-                сategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
+                contractorStatusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
+                contractorСategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
                 paid: contractor.paid
             })
             if (response) {
