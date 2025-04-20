@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/HolidayPlanningClient/static/css/main.43567898.css",
-    "main.js": "/HolidayPlanningClient/static/js/main.545a90fd.js",
+    "main.js": "/HolidayPlanningClient/static/js/main.7a257383.js",
     "static/media/image-container-profile.png": "/HolidayPlanningClient/static/media/image-container-profile.5ec7a4276eeec3cadcd0.png",
     "static/media/image-container-block4.png": "/HolidayPlanningClient/static/media/image-container-block4.c69c4beb23b776d5e37f.png",
     "static/media/container-background.png": "/HolidayPlanningClient/static/media/container-background.c28e4f3d998f85e1ec7a.png",
@@ -17,10 +17,10 @@
     "static/media/modal-logo.png": "/HolidayPlanningClient/static/media/modal-logo.f84eb7e36d848ffbfb89.png",
     "index.html": "/HolidayPlanningClient/index.html",
     "main.43567898.css.map": "/HolidayPlanningClient/static/css/main.43567898.css.map",
-    "main.545a90fd.js.map": "/HolidayPlanningClient/static/js/main.545a90fd.js.map"
+    "main.7a257383.js.map": "/HolidayPlanningClient/static/js/main.7a257383.js.map"
   },
   "entrypoints": [
     "static/css/main.43567898.css",
-    "static/js/main.545a90fd.js"
+    "static/js/main.7a257383.js"
   ]
 }
