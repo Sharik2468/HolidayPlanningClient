@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = 'https://longaquaboard96.conveyor.cloud/api'
+const apiUrl = 'https://holidayplanningapi-production.up.railway.app/api'
 const eventControllerUrl = `${apiUrl}/Holiday`
 const contractorControllerUrl = `${apiUrl}/Contractor`
 const authControllerUrl = `${apiUrl}/Auth`
