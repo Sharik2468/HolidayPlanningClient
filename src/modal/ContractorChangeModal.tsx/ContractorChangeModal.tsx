@@ -7,8 +7,8 @@ import {useFetching, useNotification} from "../../shared/hook";
 import {
     changeContractor,
     contractorCategories, ContractorCategory,
-    ContractorsData, ContractorStatus,
-    contractorStatus, getEnumMapping
+    ContractorsData, Status,
+    statuses, getEnumMapping
 } from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
@@ -52,7 +52,7 @@ export const ContractorChangeModal: React.FC<{
                 email: formData.email,
                 serviceCost: Number(formData.serviceCost),
                 holidayId: eventId,
-                contractorStatusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
+                contractorStatusId: `${getEnumMapping(Status, formData.status as keyof typeof Status)}`,
                 contractorСategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
                 paid: contractor.paid
             })
@@ -210,7 +210,7 @@ export const ContractorChangeModal: React.FC<{
                     value={formData.status}
                     onChange={(value) => handleSelectChange(value, 'status')}
                 >
-                    {contractorStatus.map((status) => (
+                    {statuses.map((status) => (
                         <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>

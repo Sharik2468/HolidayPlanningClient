@@ -4,8 +4,8 @@ import cl from './ui/MemberCreateModal.module.css'
 import Logo from '../../shared/image/modal-logo.png';
 import {inputStyle, selectStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
-import {ContractorStatus,
-    contractorStatus, createMember, getEnumMapping, memberCategories, MemberCategory, MemberData, menuCategories, MenuCategory
+import {Status,
+    statuses, createMember, getEnumMapping, memberCategories, MemberCategory, MemberData, menuCategories, MenuCategory
 } from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
@@ -32,7 +32,7 @@ export const MemberCreateModal: React.FC<{
 }> = ({ eventId, visible, onCreateMember, onCancel }) => {
     const initialFormState: FormData = {
         memberCategory: memberCategories[0] as string,
-        memberStatus: contractorStatus[0] as string,
+        memberStatus: statuses[0] as string,
         menuCategory: menuCategories[0] as string,
         fio: '',
         phoneNumber: '',
@@ -54,7 +54,7 @@ export const MemberCreateModal: React.FC<{
                 id: newMemberId,
                 holidayId: eventId,
                 memberCategoryId: `${getEnumMapping(MemberCategory, formData.memberCategory as keyof typeof MemberCategory)}`,
-                memberStatusId: `${getEnumMapping(ContractorStatus, formData.memberStatus as keyof typeof ContractorStatus)}`,
+                memberStatusId: `${getEnumMapping(Status, formData.memberStatus as keyof typeof Status)}`,
                 menuCategoryId: `${getEnumMapping(MenuCategory, formData.menuCategory as keyof typeof MenuCategory)}`,
                 fio: formData.fio,
                 phoneNumber: formData.phoneNumber,
@@ -241,7 +241,7 @@ export const MemberCreateModal: React.FC<{
                     value={formData.memberStatus}
                     onChange={(value) => handleSelectChange(value, 'memberStatus')}
                 >
-                    {contractorStatus.map((status) => (
+                    {statuses.map((status) => (
                         <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>

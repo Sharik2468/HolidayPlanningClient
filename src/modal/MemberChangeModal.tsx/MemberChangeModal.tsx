@@ -6,8 +6,8 @@ import {inputStyle, selectStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
 import {
     changeMember,
-    ContractorStatus,
-    contractorStatus,
+    Status,
+    statuses,
     getEnumMapping,
     memberCategories,
     MemberCategory,
@@ -60,7 +60,7 @@ export const MemberChangeModal: React.FC<{
                 id: member.id,
                 holidayId: eventId,
                 memberCategoryId: `${getEnumMapping(MemberCategory, formData.memberCategory as keyof typeof MemberCategory)}`,
-                memberStatusId: `${getEnumMapping(ContractorStatus, formData.memberStatus as keyof typeof ContractorStatus)}`,
+                memberStatusId: `${getEnumMapping(Status, formData.memberStatus as keyof typeof Status)}`,
                 menuCategoryId: `${getEnumMapping(MenuCategory, formData.menuCategory as keyof typeof MenuCategory)}`,
                 fio: formData.fio,
                 phoneNumber: formData.phoneNumber,
@@ -251,7 +251,7 @@ export const MemberChangeModal: React.FC<{
                     value={formData.memberStatus}
                     onChange={(value) => handleSelectChange(value, 'memberStatus')}
                 >
-                    {contractorStatus.map((status) => (
+                    {statuses.map((status) => (
                         <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>

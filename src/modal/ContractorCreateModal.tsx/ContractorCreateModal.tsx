@@ -6,9 +6,8 @@ import {inputStyle, selectStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
 import {
     contractorCategories, ContractorCategory,
-    ContractorsData, ContractorStatus,
-    contractorStatus, createContractor, getEnumMapping,
-    getEventContractors
+    ContractorsData, Status,
+    statuses, createContractor, getEnumMapping
 } from "../../shared/api";
 import {Modal} from "../../shared/ui";
 
@@ -37,7 +36,7 @@ export const ContractorCreateModal: React.FC<{
         phoneNumber: '',
         email: '',
         serviceCost: '',
-        status: contractorStatus[0] as string
+        status: statuses[0] as string
     };
 
     const [formData, setFormData] = useState<FormData>(initialFormState);
@@ -49,7 +48,7 @@ export const ContractorCreateModal: React.FC<{
             const response = await createContractor({
                 id: `${Date.now()}`,
                 holidayId: eventId,
-                ContractorStatusId: `${getEnumMapping(ContractorStatus, formData.status as keyof typeof ContractorStatus)}`,
+                ContractorStatusId: `${getEnumMapping(Status, formData.status as keyof typeof Status)}`,
                 ContractorСategoryId: `${getEnumMapping(ContractorCategory, formData.category as keyof typeof ContractorCategory)}`,
                 title: formData.name,
                 description: formData.description,
@@ -198,7 +197,7 @@ export const ContractorCreateModal: React.FC<{
                     value={formData.status}
                     onChange={(value) => handleSelectChange(value, 'status')}
                 >
-                    {contractorStatus.map((status) => (
+                    {statuses.map((status) => (
                         <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>

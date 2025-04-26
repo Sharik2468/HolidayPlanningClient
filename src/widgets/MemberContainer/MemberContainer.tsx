@@ -3,8 +3,8 @@ import {DeleteOutlined, EditOutlined, SettingOutlined,} from "@ant-design/icons"
 import React, {useState} from "react";
 import {
     changeMemberStatus,
-    ContractorStatus,
-    contractorStatus, deleteMember, getEnumMapping, MemberData
+    Status,
+    statuses, deleteMember, getEnumMapping, MemberData
 } from "../../shared/api";
 import {Button, Cascader, Dropdown, MenuProps} from "antd";
 import {useFetching, useNotification} from "../../shared/hook";
@@ -32,7 +32,7 @@ export const MemberContainer: React.FC<{
     })
     const [fetchChangeStatus, isLoadingFetchChangeStatus, errorFetchChangeStatus] = useFetching(async (newStatus: string) => {
         try {
-            const response = await changeMemberStatus(member.id, Number(getEnumMapping(ContractorStatus, newStatus as keyof typeof ContractorStatus)))
+            const response = await changeMemberStatus(member.id, Number(getEnumMapping(Status, newStatus as keyof typeof Status)))
             if(response && response.status === 200){
                 onChangeMember(member.id, {
                     ...member,
@@ -76,7 +76,7 @@ export const MemberContainer: React.FC<{
         }
     ];
 
-    const statusOptions = contractorStatus.map(val => ({
+    const statusOptions = statuses.map(val => ({
         value: val,
         label: val
     }))
@@ -91,8 +91,8 @@ export const MemberContainer: React.FC<{
     };
 
     const onChangeStatus = (
-        _: (string | ContractorStatus)[],
-        selectedOptions: { value: string | ContractorStatus; label: string | ContractorStatus }[]
+        _: (string | Status)[],
+        selectedOptions: { value: string | Status; label: string | Status }[]
     ) => {
         fetchChangeStatus(selectedOptions.map((o) => o.label).join(', '))
     };

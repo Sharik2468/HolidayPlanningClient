@@ -5,3 +5,4 @@ export {MemberContainer} from "./MemberContainer/MemberContainer"
 export {BudgetContainer} from './BudgetContainer/BudgetContainer'
 export {ProfileGoastInfoWidget} from './ProfileGoastInfoWidget/ProfileGoastInfoWidget'
 export {ProfileBudgetWidget} from './ProfileBudgetWidget/ProfileBudgetWidget'
+export {ProfileTasksWidget} from './ProfileTasksWidget/ProfileTasksWidget'

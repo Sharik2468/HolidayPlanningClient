@@ -1,0 +1,152 @@
+.taskActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.taskDeadline {
+    font-size: 16px;
+    color: #888888;
+}
+
+.settingsTaskIcon {
+    color: #888888;
+}
+
+.settingsTaskIcon:hover {
+    color: #FE954C;
+}
+
+.tasksContainer {
+    position: relative;
+    padding: 6px clamp(14px, 2.2vw, 36px);
+}
+
+.blockTaskBack {
+    width: 94%;
+    border: 2px solid #FE954C;
+    margin-top: 1%;
+    margin-left: 3%;
+    padding: 1.5vh 2vw 1.5vh 1.5vw;
+    position: relative;
+}
+
+.blockTaskName {
+    width: 100%;
+    font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settingsTaskIcon {
+    color: #888888;
+    margin-left: auto;
+}
+
+.settingsTaskIcon :hover {
+    color: #FE954C;
+}
+
+.blockTaskDate {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    font-size: 16px;
+    color: #888888;
+}
+
+.blockTaskDate div:first-child {
+    text-align: start;
+    justify-self: start;
+}
+
+.blockTaskDate div:last-child {
+    text-align: end;
+    justify-self: end;
+}
+
+.resumeTask{
+    background-color: white;
+    border-radius: 10px;
+    width: 160%;
+    margin-left: 3%;
+    margin-top: 2%;
+}
+
+.resumeTaskHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1%;
+    margin-left: 3%;
+}
+
+.resumeTaskHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.resumeTaskHeaderButton {
+    color: #043873;
+    font-size: 22px;
+}
+
+.resumeTaskHeaderText {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.resumeTaskHeaderComplete {
+    font-size: 22px;
+    color: #888888;
+    font-weight: 600;
+}
+
+.resumeTaskHeaderInfo {
+    margin-right: 3%;
+}
+
+.headerButton {
+    background: var(--primary-btn-color);
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    border-color: #FE9449;
+}
+
+.resumeUnderlineHeader{
+    width: 96%;
+    margin-left: 2%;
+    height: 2px;
+    background-color: #043873;
+    margin-top: 5px;
+}
+
+.expandButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6%;
+    width: 88%;
+    padding: 0.5%;
+    background: linear-gradient(to right, #FE9449, #EF5282);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+.expandButton:hover {
+    background: linear-gradient(to right, #f87c24, #f62364);
+}
+
+.expandButton svg {
+    margin-right: 8px;
+    font-size: 24px;
+}

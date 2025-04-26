@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const apiUrl = 'https://holidayplanningapi-production.up.railway.app/api'
+const apiUrl = 'https://localhost:7230/api'
 const eventControllerUrl = `${apiUrl}/Holiday`
 const contractorControllerUrl = `${apiUrl}/Contractor`
 const authControllerUrl = `${apiUrl}/Auth`
 const memberControllerUrl = `${apiUrl}/Member`
 const holidayExpenseControllerUrl = `${apiUrl}/HolidayExpense`
 const expenseControllerUrl = `${apiUrl}/Expense`
+const goalControllerUrl = `${apiUrl}/Goal`
 
 
 export function getEnumMapping<T extends object>(enumObj: T, value: keyof T | T[keyof T]): string | number | undefined {
@@ -157,7 +158,13 @@ export enum ContractorCategory {
     "Жилье" = 9
 }
 
-export enum ContractorStatus {
+export enum Status {
+    "в ожидании" = 1,
+    "подтвержден" = 2,
+    "отклонен" = 3
+}
+
+export enum GoalStatus {
     "в ожидании" = 1,
     "подтвержден" = 2,
     "отклонен" = 3
@@ -183,7 +190,11 @@ export const contractorCategories = Object.values(ContractorCategory).filter(
     value => typeof value === "string"
 )
 
-export const contractorStatus = Object.values(ContractorStatus).filter(
+export const statuses = Object.values(Status).filter(
+    value => typeof value === "string"
+)
+
+export const goalStatuses = Object.values(GoalStatus).filter(
     value => typeof value === "string"
 )
 
@@ -224,7 +235,7 @@ export const getEventContractors = async (eventId: string) => {
                 email: contractor.email,
                 serviceCost: contractor.serviceCost,
                 category: getEnumMapping(ContractorCategory, Number(contractor.contractorСategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(contractor.contractorStatusId)),
+                status: getEnumMapping(Status, Number(contractor.contractorStatusId)),
                 paid: contractor.paid
             }));
             return mapData
@@ -280,7 +291,7 @@ export const createContractor = async (body: ContractorDataRequest): Promise<Con
                 email: data.email,
                 serviceCost: data.serviceCost,
                 category: getEnumMapping(ContractorCategory, Number(data.contractorСategoryId)),
-                status: getEnumMapping(ContractorStatus, Number(data.contractorStatusId)),
+                status: getEnumMapping(Status, Number(data.contractorStatusId)),
                 paid: data.paid
             } as ContractorsData
         }
@@ -429,7 +440,7 @@ export const getMembersByEventId = async (eventId: string) => {
                 id: member.id,
                 holidayId: member.holidayId,
                 memberCategory: getEnumMapping(MemberCategory, Number(member.memberCategoryId)),
-                memberStatus: getEnumMapping(ContractorStatus, Number(member.memberStatusId)),
+                memberStatus: getEnumMapping(Status, Number(member.memberStatusId)),
                 menuCategory: getEnumMapping(MenuCategory, Number(member.menuCategoryId)),
                 fio: member.fio,
                 phoneNumber: member.phoneNumber,
@@ -741,6 +752,85 @@ export const createBudget = async (newBudget: CreateBudgetData) => {
     ).catch(
         error => {
             console.error(`Ошибка при добавлении статьи расходов: ${error}`)
+            return undefined
+        }
+    )
+}
+
+
+
+export interface GoalData {
+    id: string,
+    holidayId: string,
+    goalStatusId: string,
+    title: string,
+    deadline: Date
+}
+
+export const getGoalsBuEventId = async (eventId: string) => {
+    return await axios.get(`${goalControllerUrl}/HolidayId/${eventId}`).then(
+        response => {
+            const data = response.data
+            const mapData: GoalData[] = data.map((goal: GoalData) => ({
+                id: goal.id,
+                holidayId: goal.holidayId,
+                goalStatusId: goal.goalStatusId,
+                title: goal.title,
+                deadline: new Date(goal.deadline)
+            }));
+            return mapData
+        }
+    ).catch(
+        error => {
+            console.error(`Ошибка при получении задач: ${error}`)
+            return [] as GoalData[]
+        }
+    )
+}
+
+export const deleteGoal = async (goalId: string) => {
+    return await axios.delete(`${goalControllerUrl}/${goalId}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при удалении задачи: ${error}`)
+            return undefined
+        }
+    )
+}
+
+export const changeGoal = async (goalId: string, body: GoalData) => {
+    return await axios.put(`${goalControllerUrl}/${goalId}`, body, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при изменении задачи: ${error}`)
+            return undefined
+        }
+    )
+}
+
+export const createGoal = async (newGoal: GoalData) => {
+    return await axios.post(goalControllerUrl, newGoal, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+    }).then(
+        response => response
+    ).catch(
+        error => {
+            console.error(`Ошибка при добавлении задачи: ${error}`)
             return undefined
         }
     )

@@ -4,8 +4,8 @@ import React, {useState} from "react";
 import {
     changeContractorStatus,
     ContractorsData,
-    ContractorStatus,
-    contractorStatus, deleteContractor, getEnumMapping
+    Status,
+    statuses, deleteContractor, getEnumMapping
 } from "../../shared/api";
 import {Button, Cascader, Dropdown, MenuProps} from "antd";
 import {useFetching, useNotification} from "../../shared/hook";
@@ -33,7 +33,7 @@ export const ContractorContainer: React.FC<{
     })
     const [fetchChangeStatus, isLoadingFetchChangeStatus, errorFetchChangeStatus] = useFetching(async (newStatus: string) => {
         try {
-            const response = await changeContractorStatus(contractor.id, Number(getEnumMapping(ContractorStatus, newStatus as keyof typeof ContractorStatus)))
+            const response = await changeContractorStatus(contractor.id, Number(getEnumMapping(Status, newStatus as keyof typeof Status)))
             if(response && response.status === 200){
                 onChangeContractor(contractor.id, {
                     ...contractor,
@@ -79,14 +79,14 @@ export const ContractorContainer: React.FC<{
         }
     ];
 
-    const statusOptions = contractorStatus.map(val => ({
+    const statusOptions = statuses.map(val => ({
         value: val,
         label: val
     }))
 
     const onChangeStatus = (
-        _: (string | ContractorStatus)[],
-        selectedOptions: { value: string | ContractorStatus; label: string | ContractorStatus }[]
+        _: (string | Status)[],
+        selectedOptions: { value: string | Status; label: string | Status }[]
     ) => {
         fetchChangeStatus(selectedOptions.map((o) => o.label).join(', '))
     };

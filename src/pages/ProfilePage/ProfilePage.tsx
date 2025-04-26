@@ -4,7 +4,7 @@ import {EventData, getAllEvents} from "../../shared/api";
 import {useFetching, useNotification} from "../../shared/hook";
 import {AdviceContainer, InfoContainer, ProfileMenu} from "../../shared/ui";
 import {PlusOutlined} from "@ant-design/icons";
-import {ProfileBudgetWidget, ProfileEventsWidget, ProfileGoastInfoWidget} from "../../widgets";
+import {ProfileBudgetWidget, ProfileEventsWidget, ProfileGoastInfoWidget, ProfileTasksWidget} from "../../widgets";
 import {EventCreateModal} from "../../modal/EventCreateModal";
 import {useNavigate, useLocation} from "react-router-dom";
 import {RoutesPaths} from "../../shared/config";
@@ -107,6 +107,7 @@ export const ProfilePage = () => {
                     )}
                     {selectedEventId && (
                         <>
+                            <ProfileTasksWidget eventId={selectedEventId}/>
                             <ProfileGoastInfoWidget eventId={selectedEventId}/>
                             <ProfileBudgetWidget eventId={selectedEventId}/>
                         </>
