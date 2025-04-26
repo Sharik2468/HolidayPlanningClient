@@ -165,9 +165,9 @@ export enum Status {
 }
 
 export enum GoalStatus {
-    "в ожидании" = 1,
-    "подтвержден" = 2,
-    "отклонен" = 3
+    "в процессе" = 1,
+    "выполнено" = 2,
+    "отменено" = 3
 }
 
 export enum MemberCategory {

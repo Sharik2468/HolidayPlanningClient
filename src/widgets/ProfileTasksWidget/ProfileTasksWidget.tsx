@@ -123,7 +123,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
                     <div className={cl.resumeTaskHeaderLeft}>
                         <FormOutlined className={cl.resumeTaskHeaderButton}/>
                         <div className={cl.resumeTaskHeaderText}>Задачи</div>
-                        <div className={cl.resumeTaskHeaderComplete}>Выполнено: {tasks.filter(t => Number(t.goalStatusId) === GoalStatus['подтвержден']).length}/{tasks.length}</div>
+                        <div className={cl.resumeTaskHeaderComplete}>Выполнено: {tasks.filter(t => Number(t.goalStatusId) === GoalStatus['выполнено']).length}/{tasks.length}</div>
                     </div>
                     <div className={cl.resumeTaskHeaderInfo}>
                         <Button
@@ -140,7 +140,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
 
                 <div className={cl.tasksContainer}>
                     <div className={cl.tasksContainer}>
-                        {tasks.slice(0, isExpanded ? tasks.length : 2).map((task) => (
+                        {tasks.slice(0, isExpanded ? tasks.length : 3).map((task) => (
                             <div key={task.id} className={cl.blockTaskBack}>
                                 <div className={cl.blockTaskName}>
                                     <div className={cl.statusIcon}>
