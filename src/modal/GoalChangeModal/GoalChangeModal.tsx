@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {Input, DatePicker, TimePicker, Select} from "antd";
 import dayjs, {Dayjs} from "dayjs";
-import cl from './ui/GoalCreateModal.module.css';
+import cl from './ui/GoalChangeModal.module.css';
 import Logo from '../../shared/image/modal-logo.png';
 import {dateTimePickerStyle, inputStyle, selectStyle} from "./config/theme";
 import {useFetching, useNotification} from "../../shared/hook";
 import {
-    createGoal,
+    changeGoal,
     getEnumMapping,
     GoalData,
     GoalStatus,
@@ -24,37 +24,37 @@ type FormData = {
     deadlineTime: string
 };
 
-export const GoalCreateModal: React.FC<{
+export const GoalChangeModal: React.FC<{
     visible: boolean;
     eventId: string;
-    onCreateGoal: (newGoal: GoalData) => void;
+    goal: GoalData;
+    onChangeGoal: (goalId: string, newGoal: GoalData) => void;
     onCancel: () => void;
-}> = ({ visible, eventId, onCreateGoal, onCancel }) => {
+}> = ({ visible, eventId, goal, onChangeGoal, onCancel }) => {
     const initialFormState: FormData = {
         goalStatus: goalStatuses[0] as string,
-        title: '',
-        deadlineDate: '',
-        deadlineTime: ''
+        title: goal.title,
+        deadlineDate: goal.deadline.toISOString().slice(0, 10),
+        deadlineTime: goal.deadline.toISOString().slice(11, 16),
     };
 
     const [formData, setFormData] = useState<FormData>(initialFormState);
     const notification = useNotification()
-    const [fetchCreateGoal, isLoadingFetchCreateGoal, errorFetchCreateGoal] = useFetching(async () => {
+    const [fetchChangeGoal, isLoadingFetchChangeGoal, errorFetchChangeGoal] = useFetching(async () => {
         try {
-            const newGoal: GoalData = {
-                id: `${Date.now()}`,
+            const updatedGoal: GoalData = {
+                ...goal,
                 title: formData.title,
-                holidayId: eventId,
                 goalStatusId: `${getEnumMapping(GoalStatus, formData.goalStatus as keyof typeof GoalStatus)}`,
-                deadline: new Date(`${formData.deadlineDate} ${formData.deadlineTime}`)
-            }
-            const response = await createGoal(newGoal)
+                deadline: new Date(`${formData.deadlineDate}T${formData.deadlineTime}`),
+            };
+            const response = await changeGoal(goal.id, updatedGoal);
             if (response) {
-                onCreateGoal && onCreateGoal(newGoal)
-                notification.success(`Задача '${formData.title}' успешно создана!`)
+                onChangeGoal(goal.id, updatedGoal);
+                notification.success(`Задача '${formData.title}' успешно изменена!`);
             }
         } catch (e) {
-            notification.error(`Ошибка при создании задачи: ${errorFetchCreateGoal}`)
+            notification.error(`Ошибка при изменении задачи: ${errorFetchChangeGoal}`)
         } finally {
             handleClose();
         }
@@ -86,7 +86,7 @@ export const GoalCreateModal: React.FC<{
     };
 
     const handleSubmit = () => {
-        fetchCreateGoal()
+        fetchChangeGoal()
     };
 
     const handleClose = () => {
@@ -98,12 +98,12 @@ export const GoalCreateModal: React.FC<{
         <Modal
             onCancel={handleClose}
             onOk={handleSubmit}
-            okButtonText={"Создать"}
+            okButtonText={"Изменить"}
             icon={Logo}
-            modalTitle={"Создать новую задачу"}
-            description={"Здесь вы можете создать новую задачу"}
+            modalTitle={"Изменение задачи"}
+            description={"Здесь вы можете изменить задачу"}
             visible={visible}
-            loading={isLoadingFetchCreateGoal}
+            loading={isLoadingFetchChangeGoal}
             disabled={Object.values(formData).some(value => value === '')}
         >
             <div className={cl.inputContainer}>
