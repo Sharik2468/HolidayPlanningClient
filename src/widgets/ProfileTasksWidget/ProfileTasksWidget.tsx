@@ -11,11 +11,28 @@ import {formatDate} from "../../shared/lib";
 import cl from './ui/ProfileTasksWidget.module.css';
 import {Button, Dropdown, MenuProps, Tooltip} from "antd";
 import {GoalCreateModal} from "../../modal/GoalCreateModal";
+import { GoalChangeModal } from "../../modal/GoalChangeModal";
+
+const emptyTask = {
+    id: '',
+    title: '',
+    goalStatusId: '',
+    deadline: new Date(),
+    holidayId: '',
+};
 
 export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) => {
     const [tasks, setTasks] = useState([] as GoalData[]);
+    const [selectedTask, setSelectedTask] = useState<GoalData>({
+        id: '',
+        title: '',
+        goalStatusId: '',
+        deadline: new Date(),
+        holidayId: '',
+    });
     const [isExpanded, setIsExpanded] = useState(false);
     const [isCreateGoalModal, setIsCreateGoalModal] = useState(false);
+    const [isChangeGoalModal, setIsChangeGoalModal] = useState(false);
     const notification = useNotification();
 
     const [fetchGetTasks, isLoadingFetchGetTasks, errorFetchGetTasks] = useFetching(async () => {
@@ -60,13 +77,13 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
         setIsCreateGoalModal(false);
     };
 
-    const items = (taskId: string): MenuProps['items'] => [
+    const items = (task: GoalData): MenuProps['items'] => [
         {
             label: (
                 <Button
                     icon={<EditOutlined />}
                     iconPosition={"start"}
-                    onClick={() => console.log('Изменить задачу')}
+                    onClick={() => openChangeGoalModal(task)}
                     color={"default"}
                     variant={"link"}
                 >
@@ -81,7 +98,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
                     icon={<DeleteOutlined />}
                     iconPosition={"start"}
                     loading={isLoadingFetchDeleteTasks}
-                    onClick={() => fetchDeleteTasks(taskId)}
+                    onClick={() => fetchDeleteTasks(task.id)}
                     color={"danger"}
                     variant={"link"}
                 >
@@ -90,7 +107,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
             ),
             key: '2',
         },
-    ];
+    ];    
 
     const toggleExpand = () => {
         setIsExpanded((prev) => !prev);
@@ -99,6 +116,17 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
     const onCreateGoal = (newGoal: GoalData) => {
         setTasks([...tasks, newGoal])
     }
+
+    const openChangeGoalModal = (task: GoalData) => {
+        setSelectedTask(task);
+        setIsChangeGoalModal(true);
+    };
+
+    const handleCancelChangeGoalModal = () => {
+        setIsChangeGoalModal(false);
+        setSelectedTask(emptyTask);
+    };
+
 
     const onChangeGoal = (goalId: string, newGoal: GoalData) => {
         const index = tasks.findIndex(task => task.id === goalId);
@@ -115,6 +143,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
             console.warn(`Задача с id ${goalId} не найдено`);
         }
     }
+
 
     return (
         <>
@@ -161,7 +190,7 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
 
                                     <div className={cl.taskActions}>
                                         <div className={cl.taskDeadline}>{task.deadline.getTime() < Date.now() && "(Время истекло)"}&nbsp;{formatDate(task.deadline)}</div>
-                                        <Dropdown menu={{ items: items(task.id) }} trigger={['click', 'contextMenu']}>
+                                        <Dropdown menu={{ items: items(task) }} trigger={['click', 'contextMenu']}>
                                             <SettingOutlined className={cl.settingsTaskIcon}/>
                                         </Dropdown>
                                     </div>
@@ -183,6 +212,15 @@ export const ProfileTasksWidget: React.FC<{ eventId: string }> = ({ eventId }) =
                 </>
             </div>
             <GoalCreateModal visible={isCreateGoalModal} eventId={eventId} onCreateGoal={onCreateGoal} onCancel={handleCancelCreateGoalModal}/>
+            {selectedTask.id !== '' && (
+                <GoalChangeModal
+                    visible={true}
+                    eventId={eventId}
+                    goal={selectedTask}
+                    onChangeGoal={onChangeGoal}
+                    onCancel={handleCancelChangeGoalModal}
+                />
+            )}
         </>
     );
 };
